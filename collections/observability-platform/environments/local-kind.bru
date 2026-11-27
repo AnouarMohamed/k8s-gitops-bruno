@@ -1,0 +1,13 @@
+vars {
+  prometheusUrl: http://127.0.0.1:9090
+  alertmanagerUrl: http://127.0.0.1:9093
+  grafanaUrl: http://127.0.0.1:3000
+  namespace: default
+  appName: podinfo
+  gitCommitSha: deadbeef
+  silenceId: ""
+}
+vars:secret [
+  grafanaToken,
+  prometheusToken
+]

@@ -1,0 +1,27 @@
+meta {
+  name: 07 List Scrape Targets
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{prometheusUrl}}/api/v1/targets?state=active
+  body: none
+  auth: none
+}
+
+params:query {
+  state: active
+}
+
+tests {
+  test("returns active scrape targets", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("success");
+    expect(res.getBody().data.activeTargets).to.be.an("array");
+  });
+}
+
+docs {
+  Inspects active Prometheus scrape targets to diagnose `up == 0` ServiceMonitors or PodMonitors.
+}

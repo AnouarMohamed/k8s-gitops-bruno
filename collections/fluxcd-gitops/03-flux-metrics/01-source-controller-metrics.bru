@@ -1,0 +1,26 @@
+meta {
+  name: 01 Source Controller Metrics
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{sourceControllerMetricsUrl}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: text/plain
+}
+
+tests {
+  test("source-controller exposes Prometheus metrics", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.include("gotk_reconcile_condition");
+  });
+}
+
+docs {
+  Scrapes Flux `source-controller` `/metrics` endpoint and verifies `gotk_reconcile_condition` gauges exist.
+}

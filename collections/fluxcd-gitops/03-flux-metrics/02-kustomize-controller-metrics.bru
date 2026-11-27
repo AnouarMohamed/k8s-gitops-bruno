@@ -1,0 +1,26 @@
+meta {
+  name: 02 Kustomize Controller Metrics
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{kustomizeControllerMetricsUrl}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: text/plain
+}
+
+tests {
+  test("kustomize-controller exposes Prometheus metrics", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.include("gotk_reconcile_duration_seconds");
+  });
+}
+
+docs {
+  Scrapes Flux `kustomize-controller` `/metrics` endpoint for reconciliation duration histograms.
+}

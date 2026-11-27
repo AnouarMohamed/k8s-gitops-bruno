@@ -1,0 +1,16 @@
+title = "gitleaks config for k8s-gitops-bruno"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore example placeholders and test fixtures"
+paths = [
+  '''^\.env\.example$''',
+  '''^docs/''',
+  '''^manifests/''',
+]
+regexes = [
+  '''changeme-local-dev-only''',
+  '''replace-with-.*''',
+]

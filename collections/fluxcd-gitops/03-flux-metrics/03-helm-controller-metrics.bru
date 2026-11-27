@@ -1,0 +1,26 @@
+meta {
+  name: 03 Helm Controller Metrics
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{helmControllerMetricsUrl}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: text/plain
+}
+
+tests {
+  test("helm-controller exposes Prometheus metrics", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.include("gotk_reconcile_condition");
+  });
+}
+
+docs {
+  Scrapes Flux `helm-controller` `/metrics` endpoint for HelmRelease reconciliation status.
+}

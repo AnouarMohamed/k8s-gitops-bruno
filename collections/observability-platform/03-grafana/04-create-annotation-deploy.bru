@@ -1,0 +1,52 @@
+meta {
+  name: 04 Create Deploy Annotation
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{grafanaUrl}}/api/annotations
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{grafanaToken}}
+}
+
+vars:pre-request {
+  annotationTimeMs: 0
+}
+
+script:pre-request {
+  bru.setVar("annotationTimeMs", String(Date.now()));
+}
+
+body:json {
+  {
+    "time": {{annotationTimeMs}},
+    "tags": [
+      "gitops",
+      "deploy",
+      "{{namespace}}",
+      "{{appName}}"
+    ],
+    "text": "GitOps sync completed for {{appName}} ({{gitCommitSha}})"
+  }
+}
+
+tests {
+  test("records GitOps deployment annotation in Grafana", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("id");
+  });
+}
+
+docs {
+  Posts a deployment marker annotation to Grafana so Argo CD / Flux syncs appear as vertical
+  markers across latency and error-rate panels.
+}

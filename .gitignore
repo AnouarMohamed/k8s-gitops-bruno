@@ -1,0 +1,19 @@
+# Dependencies & build artifacts
+node_modules/
+reports/
+*.log
+
+# Local Bruno secrets & env overrides
+.env
+.env.*
+!.env.example
+collections/**/.env
+collections/**/environments/*.local.bru
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/

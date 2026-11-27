@@ -1,0 +1,22 @@
+meta {
+  name: 07 Get Resource Tree
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}/resource-tree
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns live resource graph", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().nodes).to.be.an("array");
+  });
+}
+
+docs {
+  Fetches the parent-child Kubernetes resource graph (`nodes` and `orphanedNodes`) backing the Argo CD UI topology view.
+}

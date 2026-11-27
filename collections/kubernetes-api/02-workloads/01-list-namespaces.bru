@@ -1,0 +1,24 @@
+meta {
+  name: 01 List Namespaces
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/namespaces
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists namespaces", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.kind).to.equal("NamespaceList");
+    expect(body.items).to.be.an("array");
+  });
+}
+
+docs {
+  Lists all namespaces in the cluster. Useful for verifying GitOps target namespaces exist prior to sync.
+}

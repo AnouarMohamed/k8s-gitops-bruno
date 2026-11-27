@@ -1,0 +1,22 @@
+meta {
+  name: 05 Get Artifact Vulnerability Report
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/projects/{{harborProject}}/repositories/{{repositoryName}}/artifacts/{{artifactRef}}/additions/vulnerabilities
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns vulnerability addition payload", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("object");
+  });
+}
+
+docs {
+  Retrieves detailed Trivy CVE findings for `{{harborProject}}/{{repositoryName}}:{{artifactRef}}`.
+}

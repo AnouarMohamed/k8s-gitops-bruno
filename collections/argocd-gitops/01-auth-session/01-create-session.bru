@@ -1,0 +1,42 @@
+meta {
+  name: 01 Create Session Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{argocdUrl}}/api/v1/session
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "username": "{{argocdUsername}}",
+    "password": "{{argocdPassword}}"
+  }
+}
+
+script:post-response {
+  const token = res.getBody()?.token;
+  if (token) {
+    bru.setEnvVar("argocdToken", token);
+  }
+}
+
+tests {
+  test("authenticates and captures Argo CD JWT", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().token).to.be.a("string");
+  });
+}
+
+docs {
+  Exchanges local Argo CD credentials for a session JWT and stores it into `argocdToken`
+  for all subsequent requests in the collection. Skip this step if using a long-lived
+  Argo CD account API token.
+}

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Harbor OCI Registry",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

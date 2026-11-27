@@ -1,0 +1,22 @@
+meta {
+  name: 04 Storage and Project Statistics
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/statistics
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns Harbor project and repository counts", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("total_project_count");
+  });
+}
+
+docs {
+  Returns aggregate counts of projects, repositories, and used storage capacity.
+}

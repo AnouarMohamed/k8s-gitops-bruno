@@ -1,0 +1,61 @@
+meta {
+  name: 01 Trigger GitHub Push Receiver
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{fluxReceiverUrl}}/hook/{{receiverId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-GitHub-Event: push
+  X-GitHub-Delivery: {{deliveryUuid}}
+  X-Hub-Signature-256: {{hubSignature256}}
+}
+
+vars:pre-request {
+  deliveryUuid: ""
+  hubSignature256: ""
+}
+
+body:json {
+  {
+    "ref": "refs/heads/{{gitBranch}}",
+    "after": "0000000000000000000000000000000000000000",
+    "repository": {
+      "full_name": "{{repoFullName}}"
+    }
+  }
+}
+
+script:pre-request {
+  const crypto = require("crypto");
+  const secret = bru.getEnvVar("fluxWebhookSecret") || "";
+  const rawBody = JSON.stringify({
+    ref: `refs/heads/${bru.getEnvVar("gitBranch")}`,
+    after: "0000000000000000000000000000000000000000",
+    repository: {
+      full_name: bru.getEnvVar("repoFullName")
+    }
+  });
+  req.setBody(rawBody);
+  const sig = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+  bru.setVar("hubSignature256", `sha256=${sig}`);
+  bru.setVar("deliveryUuid", crypto.randomUUID());
+}
+
+tests {
+  test("Flux GitHub Receiver accepts signed push webhook", function () {
+    expect([200, 202]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  Triggers a Flux `Receiver` configured with `type: github`.
+  The pre-request script serializes the exact payload string and computes the
+  `X-Hub-Signature-256` HMAC-SHA256 header using `{{fluxWebhookSecret}}`.
+}

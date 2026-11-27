@@ -1,0 +1,12 @@
+vars {
+  k8sApiUrl: https://k3s-api.homelab.local:6443
+  namespace: platform
+  deploymentName: traefik
+  podName: traefik
+  containerName: traefik
+  serviceAccountName: bruno-reader
+  replicas: 2
+}
+vars:secret [
+  k8sToken
+]

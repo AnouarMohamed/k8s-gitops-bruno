@@ -1,0 +1,50 @@
+meta {
+  name: 04 Trigger Kustomization Reconcile
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{k8sApiUrl}}/apis/kustomize.toolkit.fluxcd.io/v1/namespaces/{{fluxNamespace}}/kustomizations/{{kustomizationName}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+vars:pre-request {
+  reconcileTimestamp: ""
+}
+
+script:pre-request {
+  bru.setVar("reconcileTimestamp", new Date().toISOString());
+}
+
+body:json {
+  {
+    "metadata": {
+      "annotations": {
+        "reconcile.fluxcd.io/requestedAt": "{{reconcileTimestamp}}"
+      }
+    }
+  }
+}
+
+tests {
+  test("applies Flux reconcile requestedAt annotation", function () {
+    expect(res.getStatus()).to.equal(200);
+    const annotations = res.getBody()?.metadata?.annotations || {};
+    expect(annotations).to.have.property("reconcile.fluxcd.io/requestedAt");
+  });
+}
+
+docs {
+  Equivalent to `flux reconcile kustomization {{kustomizationName}} -n {{fluxNamespace}}`.
+  Updates `reconcile.fluxcd.io/requestedAt` to trigger an immediate reconciliation loop.
+}

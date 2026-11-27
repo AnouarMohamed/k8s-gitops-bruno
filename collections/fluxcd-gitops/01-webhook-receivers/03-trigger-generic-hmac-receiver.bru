@@ -1,0 +1,50 @@
+meta {
+  name: 03 Trigger Generic HMAC Receiver
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{fluxReceiverUrl}}/hook/{{receiverId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Signature: {{genericHmac}}
+}
+
+vars:pre-request {
+  genericHmac: ""
+}
+
+body:json {
+  {
+    "event": "manual-reconcile",
+    "source": "bruno-cli"
+  }
+}
+
+script:pre-request {
+  const crypto = require("crypto");
+  const secret = bru.getEnvVar("fluxWebhookSecret") || "";
+  const rawBody = JSON.stringify({
+    event: "manual-reconcile",
+    source: "bruno-cli"
+  });
+  req.setBody(rawBody);
+  const sig = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+  bru.setVar("genericHmac", `sha256=${sig}`);
+}
+
+tests {
+  test("Flux generic-hmac receiver accepts signed payload", function () {
+    expect([200, 202]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  Triggers a Flux `Receiver` with `type: generic-hmac`, computing `X-Signature: sha256=<digest>`
+  in the pre-request script.
+}

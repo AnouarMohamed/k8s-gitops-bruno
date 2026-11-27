@@ -1,0 +1,44 @@
+meta {
+  name: 01 SelfSubjectAccessReview
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{k8sApiUrl}}/apis/authorization.k8s.io/v1/selfsubjectaccessreviews
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "apiVersion": "authorization.k8s.io/v1",
+    "kind": "SelfSubjectAccessReview",
+    "spec": {
+      "resourceAttributes": {
+        "namespace": "{{namespace}}",
+        "verb": "get",
+        "group": "apps",
+        "resource": "deployments"
+      }
+    }
+  }
+}
+
+tests {
+  test("returns SelfSubjectAccessReview decision", function () {
+    expect(res.getStatus()).to.equal(201);
+    const body = res.getBody();
+    expect(body.kind).to.equal("SelfSubjectAccessReview");
+    expect(body.status).to.have.property("allowed");
+  });
+}
+
+docs {
+  Equivalent to `kubectl auth can-i get deployments -n {{namespace}}`.
+  Validates what permissions the active `{{k8sToken}}` holds before running mutating or CRD checks.
+}

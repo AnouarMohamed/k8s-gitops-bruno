@@ -1,0 +1,20 @@
+{
+  "name": "k8s-gitops-bruno",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bruno API collections for Kubernetes, Argo CD, Flux v2, Harbor OCI, and cluster observability",
+  "scripts": {
+    "validate": "python3 scripts/validate-collections.py",
+    "test:k8s": "bru run --env local-kind --output reports/k8s.json --format json",
+    "test:argocd": "bru run --env local-kind --output reports/argocd.json --format json",
+    "test:flux": "bru run --env local-kind --output reports/flux.json --format json",
+    "test:harbor": "bru run --env local-kind --output reports/harbor.json --format json",
+    "test:obs": "bru run --env local-kind --output reports/observability.json --format json"
+  },
+  "devDependencies": {
+    "@usebruno/cli": "^1.38.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

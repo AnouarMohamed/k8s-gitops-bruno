@@ -1,0 +1,22 @@
+meta {
+  name: 01 List ApplicationSets
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applicationsets
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists ApplicationSets", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("items");
+  });
+}
+
+docs {
+  Lists all ApplicationSets in the Argo CD namespace to audit matrix/git-directory generators.
+}

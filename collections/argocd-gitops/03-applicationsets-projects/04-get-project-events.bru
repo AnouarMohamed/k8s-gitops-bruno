@@ -1,0 +1,22 @@
+meta {
+  name: 04 Get AppProject Events
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/projects/{{projectName}}/events
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns project audit events", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("items");
+  });
+}
+
+docs {
+  Fetches Kubernetes events scoped to AppProject `{{projectName}}`.
+}

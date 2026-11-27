@@ -1,0 +1,21 @@
+meta {
+  name: 02 Ready Probe
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{prometheusUrl}}/-/ready
+  body: none
+  auth: none
+}
+
+tests {
+  test("Prometheus is ready to serve PromQL queries", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Verifies Prometheus TSDB replay and WAL readiness (`/-/ready`).
+}

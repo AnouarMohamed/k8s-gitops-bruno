@@ -1,0 +1,31 @@
+meta {
+  name: 03 Get Pod Logs
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/namespaces/{{namespace}}/pods/{{podName}}/log?tailLines=100&timestamps=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  tailLines: 100
+  timestamps: true
+}
+
+headers {
+  Accept: text/plain
+}
+
+tests {
+  test("retrieves pod logs", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Fetches the trailing 100 log lines with RFC3339 timestamps for `{{podName}}` in `{{namespace}}`.
+  Add `container={{containerName}}` query param for multi-container pods.
+}

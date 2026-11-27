@@ -1,0 +1,40 @@
+meta {
+  name: 02 Create Hardened Project
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{harborUrl}}/api/v2.0/projects
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "project_name": "{{harborProject}}",
+    "public": false,
+    "metadata": {
+      "public": "false",
+      "enable_content_trust_cosign": "true",
+      "prevent_vul": "true",
+      "severity": "high",
+      "auto_scan": "true"
+    }
+  }
+}
+
+tests {
+  test("creates Harbor project with Cosign & vulnerability gate", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}
+
+docs {
+  Creates a private Harbor project enforcing automatic Trivy scanning, blocking pulls for High/Critical
+  CVEs, and requiring Cosign signatures (`enable_content_trust_cosign: true`).
+}

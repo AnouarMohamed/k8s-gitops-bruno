@@ -1,0 +1,17 @@
+vars {
+  argocdUrl: https://argocd.homelab.local
+  argocdUsername: bruno-ops
+  appName: traefik
+  appNamespace: platform
+  projectName: platform
+  applicationSetName: homelab-apps
+  gitopsRepoUrl: https://github.com/AnouarMohamed/kubernetes-homelab.git
+  targetRevision: main
+  repoPath: platform/traefik
+  clusterServer: https://kubernetes.default.svc
+  revisionId: 0
+}
+vars:secret [
+  argocdPassword,
+  argocdToken
+]

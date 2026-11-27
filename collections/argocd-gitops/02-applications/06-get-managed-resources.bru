@@ -1,0 +1,23 @@
+meta {
+  name: 06 Get Managed Resources Diff
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}/managed-resources
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns managed resources and normalized diffs", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().items).to.be.an("array");
+  });
+}
+
+docs {
+  Returns every Kubernetes object managed by `{{appName}}` along with `liveState`,
+  `targetState`, and `normalizedLiveState` for drift inspection.
+}

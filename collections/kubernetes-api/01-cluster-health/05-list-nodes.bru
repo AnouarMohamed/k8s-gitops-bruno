@@ -1,0 +1,24 @@
+meta {
+  name: 05 List Nodes
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/nodes
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists cluster nodes", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.kind).to.equal("NodeList");
+    expect(body.items.length).to.be.above(0);
+  });
+}
+
+docs {
+  Lists all cluster nodes with capacity, kubelet version, and Ready conditions.
+}

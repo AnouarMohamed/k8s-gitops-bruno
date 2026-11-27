@@ -1,0 +1,21 @@
+meta {
+  name: 01 Healthy Probe
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{prometheusUrl}}/-/healthy
+  body: none
+  auth: none
+}
+
+tests {
+  test("Prometheus is healthy", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Verifies Prometheus process liveness (`/-/healthy`).
+}

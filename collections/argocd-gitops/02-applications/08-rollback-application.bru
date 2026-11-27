@@ -1,0 +1,34 @@
+meta {
+  name: 08 Rollback Application Revision
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}/rollback
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "id": {{revisionId}},
+    "prune": true,
+    "dryRun": false
+  }
+}
+
+tests {
+  test("triggers rollback to target history id", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Rolls back `{{appName}}` to history entry `{{revisionId}}`. Note that if automated sync
+  is enabled on the Application, Argo CD will disable auto-sync upon rollback unless configured otherwise.
+}

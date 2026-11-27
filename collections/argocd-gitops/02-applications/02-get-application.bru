@@ -1,0 +1,33 @@
+meta {
+  name: 02 Get Application Details
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  const history = res.getBody()?.status?.history || [];
+  if (history.length > 0) {
+    bru.setVar("revisionId", String(history[history.length - 1].id));
+  }
+}
+
+tests {
+  test("returns application sync and health status", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.metadata.name).to.equal(bru.getEnvVar("appName"));
+    expect(body.status).to.have.property("sync");
+    expect(body.status).to.have.property("health");
+  });
+}
+
+docs {
+  Retrieves full Application spec and live status (`sync.status`, `health.status`, `operationState`,
+  and deployment `history`), capturing the latest history ID into `revisionId`.
+}

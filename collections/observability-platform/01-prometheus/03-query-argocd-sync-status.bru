@@ -1,0 +1,26 @@
+meta {
+  name: 03 Query Argo CD Sync Status
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{prometheusUrl}}/api/v1/query?query=argocd_app_info
+  body: none
+  auth: none
+}
+
+params:query {
+  query: argocd_app_info
+}
+
+tests {
+  test("PromQL argocd_app_info query succeeds", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("success");
+  });
+}
+
+docs {
+  Queries `argocd_app_info` exposed by Argo CD `argocd-metrics` to audit `sync_status` and `health_status` across applications.
+}

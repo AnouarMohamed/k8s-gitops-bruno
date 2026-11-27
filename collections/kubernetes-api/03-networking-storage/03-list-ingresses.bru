@@ -1,0 +1,22 @@
+meta {
+  name: 03 List Ingresses
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/networking.k8s.io/v1/namespaces/{{namespace}}/ingresses
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists ingresses", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("IngressList");
+  });
+}
+
+docs {
+  Lists `networking.k8s.io/v1` Ingress objects, host rules, TLS secrets, and ingressClassName assignments.
+}

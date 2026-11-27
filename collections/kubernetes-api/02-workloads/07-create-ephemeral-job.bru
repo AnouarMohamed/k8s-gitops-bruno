@@ -1,0 +1,89 @@
+meta {
+  name: 07 Create Ephemeral Smoke Job
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{k8sApiUrl}}/apis/batch/v1/namespaces/{{namespace}}/jobs
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+vars:pre-request {
+  jobSuffix: ""
+}
+
+script:pre-request {
+  bru.setVar("jobSuffix", Date.now().toString(36));
+}
+
+body:json {
+  {
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+      "name": "bruno-smoke-{{jobSuffix}}",
+      "labels": {
+        "app.kubernetes.io/managed-by": "bruno",
+        "purpose": "smoke-check"
+      }
+    },
+    "spec": {
+      "ttlSecondsAfterFinished": 120,
+      "backoffLimit": 1,
+      "template": {
+        "spec": {
+          "restartPolicy": "Never",
+          "securityContext": {
+            "runAsNonRoot": true,
+            "runAsUser": 65534,
+            "seccompProfile": {
+              "type": "RuntimeDefault"
+            }
+          },
+          "containers": [
+            {
+              "name": "smoke",
+              "image": "cgr.dev/chainguard/busybox:latest",
+              "command": ["sh", "-c", "echo 'bruno smoke ok'"],
+              "securityContext": {
+                "allowPrivilegeEscalation": false,
+                "readOnlyRootFilesystem": true,
+                "capabilities": {
+                  "drop": ["ALL"]
+                }
+              },
+              "resources": {
+                "requests": {
+                  "cpu": "10m",
+                  "memory": "16Mi"
+                },
+                "limits": {
+                  "cpu": "50m",
+                  "memory": "32Mi"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+tests {
+  test("creates restricted-PSS compliant job", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().kind).to.equal("Job");
+  });
+}
+
+docs {
+  Creates a Pod Security Standards (`restricted`) compliant `batch/v1` Job with `ttlSecondsAfterFinished: 120`
+  to validate scheduling, image pull, and admission policies (Kyverno/OPA).
+}

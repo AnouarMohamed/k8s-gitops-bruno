@@ -1,0 +1,22 @@
+meta {
+  name: 02 Get Current User Info
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/session/userinfo
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns authenticated user session info", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().loggedIn).to.equal(true);
+  });
+}
+
+docs {
+  Verifies that the active `argocdToken` is valid and returns the user's groups and issuer.
+}

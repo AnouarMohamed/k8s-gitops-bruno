@@ -1,0 +1,22 @@
+meta {
+  name: 02 List Flux Kustomizations CRD
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/kustomize.toolkit.fluxcd.io/v1/kustomizations
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists Flux Kustomizations cluster-wide", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("KustomizationList");
+  });
+}
+
+docs {
+  Lists all `kustomize.toolkit.fluxcd.io/v1` Kustomizations across namespaces, including `Ready` condition and `lastAppliedRevision`.
+}

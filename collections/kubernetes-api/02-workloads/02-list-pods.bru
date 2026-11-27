@@ -1,0 +1,33 @@
+meta {
+  name: 02 List Pods in Namespace
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/namespaces/{{namespace}}/pods?limit=100
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 100
+}
+
+script:post-response {
+  const items = res.getBody()?.items || [];
+  if (items.length > 0) {
+    bru.setVar("podName", items[0].metadata.name);
+  }
+}
+
+tests {
+  test("lists pods in namespace", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("PodList");
+  });
+}
+
+docs {
+  Lists pods in `{{namespace}}` and stores the first pod name in `podName` for downstream log retrieval.
+}

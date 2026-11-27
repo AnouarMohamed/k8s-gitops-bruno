@@ -1,0 +1,22 @@
+meta {
+  name: 03 System Info
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/systeminfo
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns Harbor version and auth mode", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("harbor_version");
+  });
+}
+
+docs {
+  Retrieves Harbor version, OIDC/DB auth mode, and Banner/Registry storage configuration.
+}

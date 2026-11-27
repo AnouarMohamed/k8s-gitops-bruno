@@ -1,0 +1,22 @@
+meta {
+  name: 05 List PersistentVolumeClaims
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/namespaces/{{namespace}}/persistentvolumeclaims
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists PVCs", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("PersistentVolumeClaimList");
+  });
+}
+
+docs {
+  Lists PersistentVolumeClaims and their binding phase (`Bound`, `Pending`) in `{{namespace}}`.
+}

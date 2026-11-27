@@ -1,0 +1,50 @@
+meta {
+  name: 06 Rollout Restart Patch
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{k8sApiUrl}}/apis/apps/v1/namespaces/{{namespace}}/deployments/{{deploymentName}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/strategic-merge-patch+json
+}
+
+vars:pre-request {
+  restartedAt: ""
+}
+
+script:pre-request {
+  bru.setVar("restartedAt", new Date().toISOString());
+}
+
+body:json {
+  {
+    "spec": {
+      "template": {
+        "metadata": {
+          "annotations": {
+            "kubectl.kubernetes.io/restartedAt": "{{restartedAt}}"
+          }
+        }
+      }
+    }
+  }
+}
+
+tests {
+  test("deployment rollout restart annotation applied", function () {
+    expect(res.getStatus()).to.equal(200);
+    const annotations = res.getBody()?.spec?.template?.metadata?.annotations || {};
+    expect(annotations).to.have.property("kubectl.kubernetes.io/restartedAt");
+  });
+}
+
+docs {
+  Replicates `kubectl rollout restart deployment/{{deploymentName}}` by setting the
+  `kubectl.kubernetes.io/restartedAt` pod template annotation via strategic merge patch.
+}

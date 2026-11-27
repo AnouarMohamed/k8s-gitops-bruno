@@ -1,0 +1,20 @@
+headers {
+  Accept: application/json
+  User-Agent: bruno-argocd-gitops/1.0
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{argocdToken}}
+}
+
+docs {
+  # Argo CD GitOps API Collection
+
+  Full lifecycle REST API collection for Argo CD (`/api/v1/*`): session authentication,
+  Application CRUD, sync/refresh/rollback triggers, resource trees, ApplicationSets,
+  AppProjects, Git/OCI repositories, and managed clusters.
+}

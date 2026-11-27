@@ -1,0 +1,24 @@
+meta {
+  name: 03 Get Server Version
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{argocdUrl}}/api/version
+  body: none
+  auth: none
+}
+
+tests {
+  test("returns Argo CD server and Helm/Kustomize versions", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body).to.have.property("Version");
+    expect(body).to.have.property("KustomizeVersion");
+  });
+}
+
+docs {
+  Queries `/api/version` to inspect Argo CD version, Git commit, Go version, Kustomize, and Helm toolchains.
+}

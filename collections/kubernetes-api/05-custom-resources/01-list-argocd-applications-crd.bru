@@ -1,0 +1,23 @@
+meta {
+  name: 01 List Argo CD Application CRDs
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/argoproj.io/v1alpha1/namespaces/argocd/applications
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists argoproj Application CRDs", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("ApplicationList");
+  });
+}
+
+docs {
+  Queries `argoproj.io/v1alpha1` Application objects directly through `kube-apiserver`, bypassing the Argo CD API server.
+  Helpful when diagnosing Argo CD server outages or comparing etcd state against UI cache.
+}

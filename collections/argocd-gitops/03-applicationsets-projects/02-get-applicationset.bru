@@ -1,0 +1,22 @@
+meta {
+  name: 02 Get ApplicationSet
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applicationsets/{{applicationSetName}}
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("retrieves ApplicationSet definition and conditions", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().metadata.name).to.equal(bru.getEnvVar("applicationSetName"));
+  });
+}
+
+docs {
+  Inspects a single ApplicationSet (`{{applicationSetName}}`), including generator parameters and controller status conditions.
+}

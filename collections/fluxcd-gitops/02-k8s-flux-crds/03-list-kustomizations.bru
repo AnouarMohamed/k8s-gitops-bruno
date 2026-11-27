@@ -1,0 +1,26 @@
+meta {
+  name: 03 List Kustomizations
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/kustomize.toolkit.fluxcd.io/v1/namespaces/{{fluxNamespace}}/kustomizations
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+tests {
+  test("lists Flux Kustomizations", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("KustomizationList");
+  });
+}
+
+docs {
+  Lists `kustomize.toolkit.fluxcd.io/v1` Kustomizations in `{{fluxNamespace}}`.
+}

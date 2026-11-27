@@ -1,0 +1,12 @@
+vars {
+  k8sApiUrl: https://127.0.0.1:6443
+  namespace: default
+  deploymentName: podinfo
+  podName: podinfo
+  containerName: podinfo
+  serviceAccountName: bruno-reader
+  replicas: 2
+}
+vars:secret [
+  k8sToken
+]

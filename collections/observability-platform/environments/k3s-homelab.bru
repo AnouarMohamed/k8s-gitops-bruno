@@ -1,0 +1,13 @@
+vars {
+  prometheusUrl: https://prometheus.homelab.local
+  alertmanagerUrl: https://alertmanager.homelab.local
+  grafanaUrl: https://grafana.homelab.local
+  namespace: platform
+  appName: traefik
+  gitCommitSha: main
+  silenceId: ""
+}
+vars:secret [
+  grafanaToken,
+  prometheusToken
+]

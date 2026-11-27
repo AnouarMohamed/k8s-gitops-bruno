@@ -1,0 +1,12 @@
+vars {
+  k8sApiUrl: https://api.prod.k8s.internal:6443
+  namespace: production
+  deploymentName: web-frontend
+  podName: web-frontend
+  containerName: app
+  serviceAccountName: bruno-ro-auditor
+  replicas: 3
+}
+vars:secret [
+  k8sToken
+]

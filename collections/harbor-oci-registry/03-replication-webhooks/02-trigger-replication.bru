@@ -1,0 +1,31 @@
+meta {
+  name: 02 Trigger Replication Execution
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{harborUrl}}/api/v2.0/replication/executions
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "policy_id": {{replicationPolicyId}}
+  }
+}
+
+tests {
+  test("triggers Harbor replication execution", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}
+
+docs {
+  Manually triggers replication policy `{{replicationPolicyId}}` to mirror artifacts on demand.
+}

@@ -1,0 +1,29 @@
+meta {
+  name: 04 List Repository Artifacts
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/projects/{{harborProject}}/repositories/{{repositoryName}}/artifacts?with_tag=true&with_scan_overview=true&with_accessory=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  with_tag: true
+  with_scan_overview: true
+  with_accessory: true
+}
+
+tests {
+  test("lists OCI artifacts with tags, scan summary, and accessories", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}
+
+docs {
+  Lists OCI artifacts for `{{harborProject}}/{{repositoryName}}` including tags, Trivy scan overview,
+  and attached Cosign signature or SBOM accessories.
+}

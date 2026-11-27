@@ -1,0 +1,22 @@
+meta {
+  name: 03 List Managed Clusters
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/clusters
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists registered target clusters", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().items).to.be.an("array");
+  });
+}
+
+docs {
+  Lists all Kubernetes clusters registered in Argo CD along with server version and connection status.
+}

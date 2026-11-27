@@ -1,0 +1,26 @@
+meta {
+  name: 02 List OCIRepositories
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/source.toolkit.fluxcd.io/v1beta2/namespaces/{{fluxNamespace}}/ocirepositories
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+tests {
+  test("lists Flux OCIRepositories", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("OCIRepositoryList");
+  });
+}
+
+docs {
+  Lists `source.toolkit.fluxcd.io/v1beta2` OCIRepository artifacts tracked by source-controller.
+}

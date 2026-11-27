@@ -1,0 +1,21 @@
+meta {
+  name: 04 Expire Silence
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{alertmanagerUrl}}/api/v2/silence/{{silenceId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("expires Alertmanager silence", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Expires the maintenance silence identified by `{{silenceId}}` once rollout verification completes.
+}

@@ -1,0 +1,22 @@
+meta {
+  name: 01 List Repositories
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/repositories
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists configured Git and OCI repositories", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("items");
+  });
+}
+
+docs {
+  Lists registered Git and Helm/OCI repositories and their connection state (`Successful` / `Failed`).
+}

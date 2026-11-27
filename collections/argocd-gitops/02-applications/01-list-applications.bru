@@ -1,0 +1,28 @@
+meta {
+  name: 01 List Applications
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applications?projects={{projectName}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  projects: {{projectName}}
+}
+
+tests {
+  test("lists Argo CD applications", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body).to.have.property("items");
+  });
+}
+
+docs {
+  Lists Argo CD Applications filtered by `{{projectName}}`. Remove the `projects` query param
+  to inspect all applications across projects.
+}

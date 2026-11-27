@@ -1,0 +1,22 @@
+meta {
+  name: 01 List Services
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{k8sApiUrl}}/api/v1/namespaces/{{namespace}}/services
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists services in namespace", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("ServiceList");
+  });
+}
+
+docs {
+  Lists ClusterIP, NodePort, and LoadBalancer services in `{{namespace}}`.
+}

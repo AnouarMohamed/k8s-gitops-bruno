@@ -1,0 +1,21 @@
+headers {
+  Accept: application/json
+  User-Agent: bruno-harbor-oci/1.0
+}
+
+auth {
+  mode: basic
+}
+
+auth:basic {
+  username: {{harborUsername}}
+  password: {{harborPassword}}
+}
+
+docs {
+  # Harbor OCI Registry Collection
+
+  REST API v2.0 collection for Harbor container and OCI artifact registries: system health,
+  project governance, Trivy vulnerability report queries, Cosign signature accessory verification,
+  and replication/webhook policy management.
+}

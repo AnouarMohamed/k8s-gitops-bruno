@@ -1,0 +1,38 @@
+meta {
+  name: 02 SelfSubjectRulesReview
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{k8sApiUrl}}/apis/authorization.k8s.io/v1/selfsubjectrulesreviews
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "apiVersion": "authorization.k8s.io/v1",
+    "kind": "SelfSubjectRulesReview",
+    "spec": {
+      "namespace": "{{namespace}}"
+    }
+  }
+}
+
+tests {
+  test("lists caller RBAC rules in namespace", function () {
+    expect(res.getStatus()).to.equal(201);
+    const body = res.getBody();
+    expect(body.kind).to.equal("SelfSubjectRulesReview");
+    expect(body.status.resourceRules).to.be.an("array");
+  });
+}
+
+docs {
+  Enumerates all effective RBAC rules for the authenticated caller within `{{namespace}}`.
+}

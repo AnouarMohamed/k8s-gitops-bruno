@@ -1,0 +1,18 @@
+vars {
+  k8sApiUrl: https://api.prod.k8s.internal:6443
+  fluxReceiverUrl: https://flux-webhook.prod.internal
+  fluxNamespace: flux-system
+  receiverId: prod-gitops-receiver
+  gitRepoName: kubernetes-homelab
+  kustomizationName: prod-apps
+  helmReleaseName: web-frontend
+  gitBranch: main
+  repoFullName: AnouarMohamed/kubernetes-homelab
+  sourceControllerMetricsUrl: http://source-controller.flux-system.svc.cluster.local:8080/metrics
+  kustomizeControllerMetricsUrl: http://kustomize-controller.flux-system.svc.cluster.local:8080/metrics
+  helmControllerMetricsUrl: http://helm-controller.flux-system.svc.cluster.local:8080/metrics
+}
+vars:secret [
+  k8sToken,
+  fluxWebhookSecret
+]

@@ -1,0 +1,26 @@
+meta {
+  name: 09 Delete Application
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}?cascade=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  cascade: true
+}
+
+tests {
+  test("deletes application cleanly", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Deletes `{{appName}}` with `cascade=true` (removes managed Kubernetes resources via finalizer).
+  Use `cascade=false` to delete only the Argo CD Application CR while keeping workloads running.
+}

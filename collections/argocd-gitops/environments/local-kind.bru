@@ -1,0 +1,17 @@
+vars {
+  argocdUrl: https://127.0.0.1:8080
+  argocdUsername: admin
+  appName: guestbook
+  appNamespace: default
+  projectName: default
+  applicationSetName: platform-addons
+  gitopsRepoUrl: https://github.com/AnouarMohamed/kubernetes-homelab.git
+  targetRevision: main
+  repoPath: apps/guestbook
+  clusterServer: https://kubernetes.default.svc
+  revisionId: 0
+}
+vars:secret [
+  argocdPassword,
+  argocdToken
+]

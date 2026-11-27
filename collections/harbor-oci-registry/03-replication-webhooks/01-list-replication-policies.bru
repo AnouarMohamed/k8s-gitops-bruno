@@ -1,0 +1,22 @@
+meta {
+  name: 01 List Replication Policies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/replication/policies
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists Harbor replication policies", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}
+
+docs {
+  Lists push/pull replication rules synchronizing OCI artifacts across hub/satellite registries.
+}

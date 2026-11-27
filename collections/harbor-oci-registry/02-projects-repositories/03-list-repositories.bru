@@ -1,0 +1,27 @@
+meta {
+  name: 03 List Project Repositories
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/projects/{{harborProject}}/repositories?page=1&page_size=25
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  page_size: 25
+}
+
+tests {
+  test("lists repositories in project", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}
+
+docs {
+  Lists image and Helm/OCI repositories inside `{{harborProject}}`.
+}

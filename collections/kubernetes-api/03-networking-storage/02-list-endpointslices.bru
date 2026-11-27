@@ -1,0 +1,22 @@
+meta {
+  name: 02 List EndpointSlices
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/discovery.k8s.io/v1/namespaces/{{namespace}}/endpointslices
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists endpointslices", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("EndpointSliceList");
+  });
+}
+
+docs {
+  Inspects `discovery.k8s.io/v1` EndpointSlices to verify ready vs. terminating backend pod IPs.
+}

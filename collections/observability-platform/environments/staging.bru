@@ -1,0 +1,13 @@
+vars {
+  prometheusUrl: https://prometheus.staging.internal
+  alertmanagerUrl: https://alertmanager.staging.internal
+  grafanaUrl: https://grafana.staging.internal
+  namespace: staging-apps
+  appName: web-frontend
+  gitCommitSha: main
+  silenceId: ""
+}
+vars:secret [
+  grafanaToken,
+  prometheusToken
+]

@@ -1,0 +1,38 @@
+meta {
+  name: 05 Suspend HelmRelease
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{k8sApiUrl}}/apis/helm.toolkit.fluxcd.io/v2/namespaces/{{fluxNamespace}}/helmreleases/{{helmReleaseName}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+body:json {
+  {
+    "spec": {
+      "suspend": true
+    }
+  }
+}
+
+tests {
+  test("suspends Flux HelmRelease", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().spec.suspend).to.equal(true);
+  });
+}
+
+docs {
+  Equivalent to `flux suspend helmrelease {{helmReleaseName}} -n {{fluxNamespace}}` during incident mitigation.
+}

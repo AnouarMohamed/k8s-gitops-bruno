@@ -1,0 +1,12 @@
+vars {
+  k8sApiUrl: https://api.staging.k8s.internal:6443
+  namespace: staging-apps
+  deploymentName: web-frontend
+  podName: web-frontend
+  containerName: app
+  serviceAccountName: bruno-ci-verifier
+  replicas: 3
+}
+vars:secret [
+  k8sToken
+]

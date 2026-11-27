@@ -1,0 +1,35 @@
+meta {
+  name: 02 Validate Repository Connectivity
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{argocdUrl}}/api/v1/repositories/{{gitopsRepoUrl}}/validate
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "repo": "{{gitopsRepoUrl}}",
+    "type": "git",
+    "project": "{{projectName}}"
+  }
+}
+
+tests {
+  test("validates repository reachability from repo-server", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Tests repository credentials and TLS trust from inside Argo CD `repo-server`.
+  Note: Bruno URL-encodes path segments automatically; for slashes in `gitopsRepoUrl`,
+  pass the URL-encoded repo URL if your Argo CD version expects encoded path parameters.
+}

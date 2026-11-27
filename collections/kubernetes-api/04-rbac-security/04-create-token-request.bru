@@ -1,0 +1,39 @@
+meta {
+  name: 04 Create Ephemeral TokenRequest
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{k8sApiUrl}}/api/v1/namespaces/{{namespace}}/serviceaccounts/{{serviceAccountName}}/token
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "apiVersion": "authentication.k8s.io/v1",
+    "kind": "TokenRequest",
+    "spec": {
+      "expirationSeconds": 3600
+    }
+  }
+}
+
+tests {
+  test("mints short-lived TokenRequest", function () {
+    expect(res.getStatus()).to.equal(201);
+    const body = res.getBody();
+    expect(body.kind).to.equal("TokenRequest");
+    expect(body.status.token).to.be.a("string");
+  });
+}
+
+docs {
+  Requests a short-lived (1h) bound ServiceAccount token via `TokenRequest` instead of long-lived Secret tokens.
+  Requires `create` permission on `serviceaccounts/token` in `{{namespace}}`.
+}

@@ -1,0 +1,25 @@
+meta {
+  name: 02 Readyz Probe
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{k8sApiUrl}}/readyz?verbose=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  verbose: true
+}
+
+tests {
+  test("kube-apiserver readyz returns 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Verifies `kube-apiserver` readiness including etcd and informer sync checks.
+}

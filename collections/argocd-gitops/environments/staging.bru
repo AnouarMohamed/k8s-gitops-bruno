@@ -1,0 +1,17 @@
+vars {
+  argocdUrl: https://argocd.staging.internal
+  argocdUsername: ci-sync-bot
+  appName: web-frontend
+  appNamespace: staging-apps
+  projectName: workloads
+  applicationSetName: staging-services
+  gitopsRepoUrl: https://github.com/AnouarMohamed/kubernetes-homelab.git
+  targetRevision: main
+  repoPath: apps/web-frontend/overlays/staging
+  clusterServer: https://kubernetes.default.svc
+  revisionId: 0
+}
+vars:secret [
+  argocdPassword,
+  argocdToken
+]

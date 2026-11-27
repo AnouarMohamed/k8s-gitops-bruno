@@ -1,0 +1,37 @@
+meta {
+  name: 02 Trigger GitLab Push Receiver
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{fluxReceiverUrl}}/hook/{{receiverId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-Gitlab-Event: Push Hook
+  X-Gitlab-Token: {{fluxWebhookSecret}}
+}
+
+body:json {
+  {
+    "object_kind": "push",
+    "ref": "refs/heads/{{gitBranch}}",
+    "project": {
+      "path_with_namespace": "{{repoFullName}}"
+    }
+  }
+}
+
+tests {
+  test("Flux GitLab Receiver accepts push hook", function () {
+    expect([200, 202]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  Triggers a Flux `Receiver` configured with `type: gitlab` using the `X-Gitlab-Token` shared secret header.
+}

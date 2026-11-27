@@ -1,0 +1,19 @@
+headers {
+  Accept: application/json
+  User-Agent: bruno-k8s-api/1.0
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+docs {
+  # Kubernetes API Collection
+
+  Direct REST requests against `kube-apiserver` covering cluster health, core workloads,
+  networking, RBAC access reviews, and GitOps CRDs (Argo CD, Flux, Cert-Manager, Kyverno).
+}

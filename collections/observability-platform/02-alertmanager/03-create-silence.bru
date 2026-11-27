@@ -1,0 +1,63 @@
+meta {
+  name: 03 Create Maintenance Silence
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{alertmanagerUrl}}/api/v2/silences
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+vars:pre-request {
+  silenceStartsAt: ""
+  silenceEndsAt: ""
+}
+
+script:pre-request {
+  const now = new Date();
+  const ends = new Date(now.getTime() + 30 * 60 * 1000);
+  bru.setVar("silenceStartsAt", now.toISOString());
+  bru.setVar("silenceEndsAt", ends.toISOString());
+}
+
+body:json {
+  {
+    "matchers": [
+      {
+        "name": "namespace",
+        "value": "{{namespace}}",
+        "isRegex": false,
+        "isEqual": true
+      }
+    ],
+    "startsAt": "{{silenceStartsAt}}",
+    "endsAt": "{{silenceEndsAt}}",
+    "createdBy": "bruno-gitops-smoke",
+    "comment": "Planned GitOps rollout maintenance window"
+  }
+}
+
+script:post-response {
+  const silenceId = res.getBody()?.silenceID;
+  if (silenceId) {
+    bru.setEnvVar("silenceId", silenceId);
+  }
+}
+
+tests {
+  test("creates 30-minute maintenance silence", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().silenceID).to.be.a("string");
+  });
+}
+
+docs {
+  Creates a 30-minute Alertmanager silence scoped to `namespace={{namespace}}` and saves `silenceID`
+  into `silenceId` for cleanup.
+}

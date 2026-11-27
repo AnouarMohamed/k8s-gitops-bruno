@@ -1,0 +1,22 @@
+meta {
+  name: 01 Cluster Status
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{alertmanagerUrl}}/api/v2/status
+  body: none
+  auth: none
+}
+
+tests {
+  test("Alertmanager returns cluster status", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("cluster");
+  });
+}
+
+docs {
+  Checks Alertmanager HA gossip cluster peers and active configuration YAML.
+}

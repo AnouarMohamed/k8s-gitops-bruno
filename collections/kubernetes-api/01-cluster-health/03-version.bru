@@ -1,0 +1,25 @@
+meta {
+  name: 03 Cluster Version
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{k8sApiUrl}}/version
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("returns Kubernetes version metadata", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body).to.have.property("gitVersion");
+    expect(body).to.have.property("major");
+    expect(body).to.have.property("minor");
+  });
+}
+
+docs {
+  Retrieves control-plane Kubernetes `gitVersion`, `platform`, and build metadata.
+}

@@ -1,0 +1,26 @@
+meta {
+  name: 05 Hard Refresh Manifests Cache
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/applications/{{appName}}?refresh=hard
+  body: none
+  auth: inherit
+}
+
+params:query {
+  refresh: hard
+}
+
+tests {
+  test("invalidates repo-server cache and refreshes diff", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().metadata.name).to.equal(bru.getEnvVar("appName"));
+  });
+}
+
+docs {
+  Forces Argo CD repo-server to invalidate cached manifests and recompute live vs. Git diff (`?refresh=hard`).
+}

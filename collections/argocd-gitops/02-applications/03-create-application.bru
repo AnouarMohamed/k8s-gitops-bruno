@@ -1,0 +1,67 @@
+meta {
+  name: 03 Create Application
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{argocdUrl}}/api/v1/applications?upsert=true
+  body: json
+  auth: inherit
+}
+
+params:query {
+  upsert: true
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "apiVersion": "argoproj.io/v1alpha1",
+    "kind": "Application",
+    "metadata": {
+      "name": "{{appName}}",
+      "namespace": "argocd",
+      "finalizers": [
+        "resources-finalizer.argocd.argoproj.io"
+      ]
+    },
+    "spec": {
+      "project": "{{projectName}}",
+      "source": {
+        "repoURL": "{{gitopsRepoUrl}}",
+        "targetRevision": "{{targetRevision}}",
+        "path": "{{repoPath}}"
+      },
+      "destination": {
+        "server": "{{clusterServer}}",
+        "namespace": "{{appNamespace}}"
+      },
+      "syncPolicy": {
+        "automated": {
+          "prune": true,
+          "selfHeal": true
+        },
+        "syncOptions": [
+          "CreateNamespace=true",
+          "ServerSideApply=true"
+        ]
+      }
+    }
+  }
+}
+
+tests {
+  test("creates or upserts Argo CD application", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().metadata.name).to.equal(bru.getEnvVar("appName"));
+  });
+}
+
+docs {
+  Upserts an Argo CD Application with automated prune, self-heal, `CreateNamespace=true`,
+  and `ServerSideApply=true` sync options.
+}

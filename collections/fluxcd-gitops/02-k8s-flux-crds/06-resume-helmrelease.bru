@@ -1,0 +1,38 @@
+meta {
+  name: 06 Resume HelmRelease
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{k8sApiUrl}}/apis/helm.toolkit.fluxcd.io/v2/namespaces/{{fluxNamespace}}/helmreleases/{{helmReleaseName}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+auth:bearer {
+  token: {{k8sToken}}
+}
+
+body:json {
+  {
+    "spec": {
+      "suspend": false
+    }
+  }
+}
+
+tests {
+  test("resumes Flux HelmRelease", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().spec.suspend).to.equal(false);
+  });
+}
+
+docs {
+  Equivalent to `flux resume helmrelease {{helmReleaseName}} -n {{fluxNamespace}}` to restore automated reconciliation.
+}

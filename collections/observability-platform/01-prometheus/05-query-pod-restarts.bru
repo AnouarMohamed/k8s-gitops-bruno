@@ -1,0 +1,26 @@
+meta {
+  name: 05 Query Pod Restarts
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{prometheusUrl}}/api/v1/query?query=sum%20by%20(namespace%2C%20pod)%20(increase(kube_pod_container_status_restarts_total%5B1h%5D))%20%3E%200
+  body: none
+  auth: none
+}
+
+params:query {
+  query: sum by (namespace, pod) (increase(kube_pod_container_status_restarts_total[1h])) > 0
+}
+
+tests {
+  test("queries container restarts over 1h window", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("success");
+  });
+}
+
+docs {
+  Identifies pods experiencing container restarts in the trailing 1-hour window via `kube-state-metrics`.
+}

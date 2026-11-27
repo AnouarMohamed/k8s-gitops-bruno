@@ -1,0 +1,36 @@
+meta {
+  name: 05 Scale Deployment Subresource
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{k8sApiUrl}}/apis/apps/v1/namespaces/{{namespace}}/deployments/{{deploymentName}}/scale
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+body:json {
+  {
+    "spec": {
+      "replicas": {{replicas}}
+    }
+  }
+}
+
+tests {
+  test("scales deployment replicas", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().spec.replicas).to.equal(Number(bru.getEnvVar("replicas")));
+  });
+}
+
+docs {
+  Uses the `/scale` subresource with `application/merge-patch+json` to adjust replica count.
+  Note: if the deployment is managed by Argo CD or Flux without `ignoreDifferences` on `/spec/replicas`,
+  the GitOps controller will reconcile this back to Git state.
+}

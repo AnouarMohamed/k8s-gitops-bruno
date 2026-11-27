@@ -1,0 +1,50 @@
+meta {
+  name: 04 Trigger Harbor OCI Webhook
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{fluxReceiverUrl}}/hook/{{receiverId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{fluxWebhookSecret}}
+}
+
+body:json {
+  {
+    "type": "PUSH_ARTIFACT",
+    "occur_at": 1764270000,
+    "operator": "ci-builder",
+    "event_data": {
+      "resources": [
+        {
+          "digest": "sha256:4f53e2564790c8e7856ec08e3847329e543df93c",
+          "tag": "v1.4.2",
+          "resource_url": "registry.homelab.local/platform/podinfo:v1.4.2"
+        }
+      ],
+      "repository": {
+        "name": "podinfo",
+        "namespace": "platform",
+        "repo_full_name": "platform/podinfo",
+        "repo_type": "private"
+      }
+    }
+  }
+}
+
+tests {
+  test("Flux Harbor receiver triggers OCIRepository reconciliation", function () {
+    expect([200, 202]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  Simulates a Harbor `PUSH_ARTIFACT` webhook event targeting a Flux `Receiver` with `type: harbor`
+  to reconcile `OCIRepository` resources without waiting for the polling interval.
+}

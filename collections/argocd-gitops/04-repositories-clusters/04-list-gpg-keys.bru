@@ -1,0 +1,22 @@
+meta {
+  name: 04 List GPG Verification Keys
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{argocdUrl}}/api/v1/gpgkeys
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists GPG public keys for commit verification", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("items");
+  });
+}
+
+docs {
+  Lists GPG public keys imported into Argo CD for verifying signed Git commits on release branches.
+}

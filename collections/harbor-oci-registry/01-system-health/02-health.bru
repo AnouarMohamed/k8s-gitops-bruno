@@ -1,0 +1,23 @@
+meta {
+  name: 02 Component Health
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/health
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("all Harbor core components report healthy", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.status).to.equal("healthy");
+  });
+}
+
+docs {
+  Verifies health of core, registry, database, redis, jobservice, and Trivy scanner components.
+}

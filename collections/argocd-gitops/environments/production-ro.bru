@@ -1,0 +1,17 @@
+vars {
+  argocdUrl: https://argocd.prod.internal
+  argocdUsername: bruno-ro-auditor
+  appName: web-frontend
+  appNamespace: production
+  projectName: workloads-prod
+  applicationSetName: prod-services
+  gitopsRepoUrl: https://github.com/AnouarMohamed/kubernetes-homelab.git
+  targetRevision: main
+  repoPath: apps/web-frontend/overlays/prod
+  clusterServer: https://kubernetes.default.svc
+  revisionId: 0
+}
+vars:secret [
+  argocdPassword,
+  argocdToken
+]

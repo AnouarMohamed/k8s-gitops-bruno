@@ -1,0 +1,22 @@
+meta {
+  name: 04 List NetworkPolicies
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{k8sApiUrl}}/apis/networking.k8s.io/v1/namespaces/{{namespace}}/networkpolicies
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists network policies", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().kind).to.equal("NetworkPolicyList");
+  });
+}
+
+docs {
+  Lists namespace NetworkPolicies to audit ingress/egress isolation rules.
+}

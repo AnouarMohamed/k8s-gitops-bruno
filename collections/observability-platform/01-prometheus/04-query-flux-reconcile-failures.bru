@@ -1,0 +1,29 @@
+meta {
+  name: 04 Query Flux Reconcile Failures
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{prometheusUrl}}/api/v1/query?query=gotk_reconcile_condition%7Btype%3D%22Ready%22%2Cstatus%3D%22False%22%7D
+  body: none
+  auth: none
+}
+
+params:query {
+  query: gotk_reconcile_condition{type="Ready",status="False"}
+}
+
+tests {
+  test("checks failing Flux reconciliations", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.status).to.equal("success");
+    expect(body.data.result).to.be.an("array");
+  });
+}
+
+docs {
+  Queries `gotk_reconcile_condition{type="Ready",status="False"}` to detect any GitRepository,
+  Kustomization, or HelmRelease stuck in a non-ready state.
+}

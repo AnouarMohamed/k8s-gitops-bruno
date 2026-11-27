@@ -1,0 +1,23 @@
+meta {
+  name: 07 List Cosign Accessories
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{harborUrl}}/api/v2.0/projects/{{harborProject}}/repositories/{{repositoryName}}/artifacts/{{artifactRef}}/accessories
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("lists artifact accessories such as Cosign signatures", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}
+
+docs {
+  Verifies whether Cosign signature (`signature.cosign`) or SBOM attestations are attached
+  to `{{artifactRef}}` before Kyverno admission verification.
+}
