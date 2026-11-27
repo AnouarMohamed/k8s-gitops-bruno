@@ -12,7 +12,7 @@
     "test:obs": "bru run --env local-kind --output reports/observability.json --format json"
   },
   "devDependencies": {
-    "@usebruno/cli": "^1.38.0"
+    "@usebruno/cli": "^4.4.0"
   },
   "engines": {
     "node": ">=20.0.0"
